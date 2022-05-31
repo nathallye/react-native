@@ -9,6 +9,10 @@ import Random from "./components/Random";
 import Fragment from "./components/Fragment";
 import Btn from "./components/Btn";
 import Counter from "./components/Counter";
+import Dad from "./components/direct/Dad";
+import DadIndirect from "./components/indirect/DadIndirect";
+import Differentiate from "./components/Differentiate";
+import OddEven from "./components/OddEven";
 
 const App = () => {
   // console.warn("Opa!")
@@ -22,6 +26,10 @@ const App = () => {
       <Fragment />
       <Btn />
       <Counter initialValue={100} step={5}/>
+      <Dad />
+      <DadIndirect />
+      <Differentiate />
+      <OddEven number={3}/>
     </SafeAreaView>
   );
 }

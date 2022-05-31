@@ -2,16 +2,16 @@ import { StyleSheet } from "react-native";
 
 export default StyleSheet.create({
   textDefault: {
-    fontSize: 22,
+    fontSize: 18,
     textAlign: "center",
 
-    marginTop: 20,
+    marginTop: 10,
   },
   textSecondary: {
-    fontSize: 22,
+    fontSize: 16,
     textAlign: "center",
 
-    marginBottom: 20,
+    marginBottom: 10,
   },
   buttons: {
     flexDirection: "row",

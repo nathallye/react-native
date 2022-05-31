@@ -1043,8 +1043,6 @@ import Btn from "./components/Btn";
 import Counter from "./components/Counter";
 
 const App = () => {
-  // console.warn("Opa!")
-
   return (
     <SafeAreaView style={styles.App}>
       <Text style={Style.textDefault}>Olá mundo!</Text>
@@ -1179,8 +1177,6 @@ import Btn from "./components/Btn";
 import Counter from "./components/Counter";
 
 const App = () => {
-  // console.warn("Opa!")
-
   return (
     <SafeAreaView style={styles.App}>
       <Text style={Style.textDefault}>Olá mundo!</Text>
@@ -1234,4 +1230,480 @@ const Counter = ({ initialValue = 0, step = 1 }) => {
 }
 
 export default Counter;
+```
+
+### Comunição Direta
+
+A nossa aplicação em React é uma árvore de componentes. Podemos quebrar nossa aplicação em múltiplos componentes sempre visando o reuso a organização. E dentro dessa árvore de componentes é muito comum que tenhamos uma comunição direta e indireta.
+
+- Para exemplificarmos melhor dentro de src/components vamos criar uma pasta chamada direta/_direct_ e dentro dela vamos criar os componentes funcionais Pai/_Dad_ e Filho/_Child_. 
+No componente Filho/_Child_ queremos receber um texto dentro de props(_porps.text_) e um número(_props.number_). Resumindo, vamos esperar receber esses três valores a partir do componente pai:
+
+``` JSX
+import React from "react";
+import { Text } from "react-native";
+
+import Style from "../style";
+
+const Child = (props) => {
+  return (
+    <>
+      <Text style={Style.textDefault}>{props.text}</Text>
+      <Text style={Style.textSecondary}>{props.number}</Text>
+    </>
+  );
+}
+
+export default Child;
+```
+
+- Como funciona a comunicação de um componente pai, para um componente filho? 
+Passamos via **props(propriedades)** aquilo que queremos passar do pai para o filho. 
+Até porquê há uma relação direta, pois dentro do pai há uma referência direta/intância para o componente filho(import do componente filho, de tal forma que conseguimos passar as props para o filho).
+Dessa forma, vamos passar os valores de _text_ e _number_ para o componente _Child_:
+
+``` JSX
+import React from "react";
+
+import Child from "./Child";
+
+const Dad = (props) => {
+  return (
+    <Child text="Comunicação Direta" number={23}/>
+  );
+}
+
+export default Dad;
+```
+
+- E para visualizarmos isso em tela, vamos importar o componente _Dad_ dentro do componente _App_:
+
+``` JSX
+import React from "react";
+import { StyleSheet, SafeAreaView, Text } from "react-native";
+
+import Style from "./components/style";
+
+import First from "./components/First";
+import MinMax from "./components/MinMax";
+import Random from "./components/Random";
+import Fragment from "./components/Fragment";
+import Btn from "./components/Btn";
+import Counter from "./components/Counter";
+import Dad from "./components/direct/Dad";
+
+const App = () => {
+  return (
+    <SafeAreaView style={styles.App}>
+      <Text style={Style.textDefault}>Olá mundo!</Text>
+      <First />
+      <MinMax min={10} max={20} />
+      <Random min={0} max={100}/>
+      <Fragment />
+      <Btn />
+      <Counter initialValue={100} step={5}/>
+      <Dad />
+    </SafeAreaView>
+  );
+}
+
+// [...]
+
+export default App;
+```
+
+### Comunição Indireta
+
+A comunicação indireta, ocorre quando precisamos passar informações do componente filho para o componente pai. Mas o componente filho não tem uma referência direta com o componente pai, então não temo como via propriedades(porps) intânciar um componente pai(senão o pai passaria a ser filho e o filho passaria a ser pai).
+
+- Para exemplificarmos melhor dentro de src/components vamos criar uma pasta chamada indireta/_indirect_  e nela os componentes funcionais Pai/_DadIndirect_ e Filho/_Child_.
+
+- Vamos inserir dentro dos Componetes a extrutura básica de um Componente funcional. Lembrando que o componente _Dad_ leva a referência do componente filho:
+
+``` JSX DadIndirect.js
+import React from "react";
+import { Text } from "react-native";
+
+import Style from "../style";
+
+import Child from "./Child";
+
+const DadIndirect = (props) => {
+  return (
+    <>
+      <Text style={Style.textDefault}>Comunicação Indireta</Text>
+      <Child />
+    </>
+  );
+}
+
+export default DadIndirect;
+```
+
+``` JSX Child.js
+import React from "react";
+import { View } from "react-native";
+
+const Child = (props) => {
+  return (
+    <View></View>
+  );
+}
+
+export default Child;
+```
+
+- E vamos importar esse componente no nosso arquivo principal(_App.js_):
+
+``` JSX
+import React from "react";
+import { StyleSheet, SafeAreaView, Text } from "react-native";
+
+import Style from "./components/style";
+
+import First from "./components/First";
+import MinMax from "./components/MinMax";
+import Random from "./components/Random";
+import Fragment from "./components/Fragment";
+import Btn from "./components/Btn";
+import Counter from "./components/Counter";
+import Dad from "./components/direct/Dad";
+import DadIndirect from "./components/indirect/DadIndirect";
+
+const App = () => {
+  return (
+    <SafeAreaView style={styles.App}>
+      <Text style={Style.textDefault}>Olá mundo!</Text>
+      <First />
+      <MinMax min={10} max={20} />
+      <Random min={0} max={100}/>
+      <Fragment />
+      <Btn />
+      <Counter initialValue={100} step={5}/>
+      <Dad />
+      <DadIndirect />
+    </SafeAreaView>
+  );
+}
+
+// [...]
+export default App;
+```
+
+- Vamos supor que no componente filho/_Child_ temos um botão, e quando clicarmos nele as informações vão ser enviadas para o componente pai/_DadIndirect_.
+
+``` JSX
+import React from "react";
+import { Button } from "react-native";
+
+const Child = (props) => {
+  return (
+    <Button 
+      title="Enviar informações"
+    />
+  );
+}
+
+export default Child;
+```
+
+Mas de fato como é feito a comunicação do sentido do filho enviar dados para o pai? Já que o filho não tem nenhum tipo de comunicação direta com o pai, diferente do pai que tem o componente filho(dentro dele)... 
+Fazemos isso com uma **função via props_**, ou seja, passamos uma função do pai/_DadIndirect_ para o filho/_Child_ e **quando o filho chamar essa função(acontece um evento)**, dessa forma, temos como passar informações para o pai.
+
+- Agora, vamos criar uma função _numberRandom_ e ela receber os valores _min_ e _max_ e essa função vai gerar um número aleatório entre os valores _min_ e _max_ fornecidos.
+E vamos adicionar o evento _onPress_ do button que vai receber uma function e chamar a função callback _numberRandom_ que vai pegar os valores de _props.min_ e _props.max_: 
+
+``` JSX
+import React from "react";
+import { Button } from "react-native";
+
+const Child = (props) => {
+
+  function numberRandom(min, max) {
+    return parseInt(Math.random() * (max - min) + min);
+  }
+
+  return (
+    <Button 
+      title="Enviar informações"
+      onPress={function() {
+        numberRandom(props.min, props.max)
+      }}
+    />
+  );
+}
+
+export default Child;
+```
+
+- E como vamos devolver esse número gerado aleatóriamente para o componente pai/_DadIndirect_? Via props. Vamos enviar dentro da propriedade _function_ a função que irá exibir valor(_displayValue_) para o componente filho, além dos valores _min_ e _max_:
+
+``` JSX
+import React from "react";
+import { Text } from "react-native";
+
+import Style from "../style";
+
+import Child from "./Child";
+
+const DadIndirect = (props) => {
+  
+  function displayValue(number) {
+    console.log(number)
+  }
+
+  return (
+    <>
+      <Text style={Style.textDefault}>Comunicação Indireta</Text>
+      <Child 
+        min={1}
+        max={60}
+        function={displayValue}
+      />
+    </>
+  );
+}
+
+export default DadIndirect;
+```
+
+- O que significa que dentro do filho vamos ter dentro de _props_ esse atributo _function_ e podemos chamá-la através de _props.function_. 
+No button vamos rastrear o evento de click com o método _onPress_ e dentro vamos receber uma função que vai chamar a função callback _numberRandom_, essa função vai retornar um número que vamos armazenar dentro da constante _n_.
+Em seguida, podemos passar esse número _n_ gerado aleatóriamente como parâmetro para a função _displayValue_ do componente pai que está dentro da propriedade function(_props.function_):
+
+``` JSX
+import React from "react";
+import { Button } from "react-native";
+
+const Child = (props) => {
+
+  function numberRandom(min, max) {
+    return parseInt(Math.random() * (max - min)) + min;
+  }
+
+  return (
+    <Button 
+      title="Enviar informações"
+      onPress={function() {
+        const n = numberRandom(props.min, props.max)
+        props.function(n)
+      }}
+    />
+  );
+}
+
+export default Child;
+```
+
+- E vamos receber esse valor no componente pai/_DadIndirect_ e mostrar na tela, mas para isso precisamos criar um estado para controlar esse valor:
+
+``` JSX
+import React, { useState } from "react";
+import { Text } from "react-native";
+
+import Style from "../style";
+
+import Child from "./Child";
+
+const DadIndirect = (props) => {
+
+  const [state, setState] = useState(0);
+  
+  function displayValue(number) {
+    setState(number)
+  }
+
+  return (
+    <>
+      <Text style={Style.textDefault}>Comunicação Indireta</Text>
+      <Text style={Style.textSecondary}>{state}</Text>
+      <Child 
+        min={1}
+        max={60}
+        function={displayValue}
+      />
+    </>
+  );
+}
+
+export default DadIndirect;
+```
+
+### Diferenciando iOS e Android 
+
+- Para entendermos melhor como isso funciona, dentro de src/components vamos criar um componente funcional chamado Diferenciar/_Differentiate_ e nele vamos importar a API _Platform_ do react native:
+
+``` JSX
+import React from "react";
+import { Text, Platform } from "react-native";
+
+import Style from "./style";
+
+const Differentiate = () => {
+  return (
+    <Text style={Style.textDefault}>Diferenciando iOS e Android</Text>
+  );
+}
+
+export default Differentiate;
+```
+
+- E vamos fazer uma estrutura condicional para que quando o sistema operacional/_OS_ for igual a "android" vai renderizar na tela o texto ""Android" e se for "ios" vai renderizar o texto "iOS", e se não for nenhum dos dois, vai renderizar "Não Identificado!":
+
+``` JSX
+import React from "react";
+import { Text, Platform } from "react-native";
+
+import Style from "./style";
+
+const Differentiate = () => {
+  let platform = '';
+
+  if (Platform.OS === 'android') {
+    platform = "Android";
+  } else if(Platform.OS === 'ios') {
+    platform = "iOS"
+  } else {
+    platform = "Não identificado!"
+  }
+
+  return (
+    <>
+      <Text style={Style.textDefault}>Diferenciando iOS e Android</Text>
+      <Text style={Style.textSecondary}>{platform}</Text>
+    </>
+  );
+}
+
+export default Differentiate;
+```
+
+- E para visualizarmos isso em tela, vamos importar esse componente _Differentiate_ no componente principal da aplicação(_App_):
+
+``` JSX
+import React from "react";
+import { StyleSheet, SafeAreaView, Text } from "react-native";
+
+import Style from "./components/style";
+
+import First from "./components/First";
+import MinMax from "./components/MinMax";
+import Random from "./components/Random";
+import Fragment from "./components/Fragment";
+import Btn from "./components/Btn";
+import Counter from "./components/Counter";
+import Dad from "./components/direct/Dad";
+import DadIndirect from "./components/indirect/DadIndirect";
+import Differentiate from "./components/Differentiate";
+
+const App = () => {
+  return (
+    <SafeAreaView style={styles.App}>
+      <Text style={Style.textDefault}>Olá mundo!</Text>
+      <First />
+      <MinMax min={10} max={20} />
+      <Random min={0} max={100}/>
+      <Fragment />
+      <Btn />
+      <Counter initialValue={100} step={5}/>
+      <Dad />
+      <DadIndirect />
+      <Differentiate />
+    </SafeAreaView>
+  );
+}
+
+// [...]
+
+export default App;
+```
+
+### Renderização condicional
+
+- Para entendermos melhor como funciona, dentro de src/components vamos criar um componente funcional chamado ParImpar/_OddEven_:
+
+``` JSX
+import React from "react";
+import { View, Text } from "react-native";
+
+import Style from "./style";
+
+const OddEven = (props) => {
+  return (
+    <View>
+    
+    </View>
+  );
+}
+
+export default OddEven;
+```
+
+- Vamos receber um número/_number_ via vamos renderizar trechos de JSX condicionalmente usandando operadores ternários. Se _number_ for par então(?) será exibido um _Text Par_ senão(:) _Text Ímpar_. Inicialmente _number_ vai ser 0:
+
+``` JSX
+import React from "react";
+import { View, Text } from "react-native";
+
+import Style from "./style";
+
+const OddEven = ({number = 0}) => {
+  return (
+    <View>
+      <Text style={Style.textDefault}>
+        Renderização Condicional de Código JSX. Solução: Operadores Ternários.
+      </Text>
+      {number % 2 === 0
+        ? <Text style={Style.textSecondary}>Par</Text>
+        : <Text style={Style.textSecondary}>Ímpar</Text>
+      }
+    </View>
+  );
+}
+
+export default OddEven;
+```
+
+- E vamos importar esse componente _OddEven_ no componente _App_ e instânciá-lo passando o valor para _number_ via props:
+
+``` JSX
+import React from "react";
+import { StyleSheet, SafeAreaView, Text } from "react-native";
+
+import Style from "./components/style";
+
+import First from "./components/First";
+import MinMax from "./components/MinMax";
+import Random from "./components/Random";
+import Fragment from "./components/Fragment";
+import Btn from "./components/Btn";
+import Counter from "./components/Counter";
+import Dad from "./components/direct/Dad";
+import DadIndirect from "./components/indirect/DadIndirect";
+import Differentiate from "./components/Differentiate";
+import OddEven from "./components/OddEven";
+
+const App = () => {
+  // console.warn("Opa!")
+
+  return (
+    <SafeAreaView style={styles.App}>
+      <Text style={Style.textDefault}>Olá mundo!</Text>
+      <First />
+      <MinMax min={10} max={20} />
+      <Random min={0} max={100}/>
+      <Fragment />
+      <Btn />
+      <Counter initialValue={100} step={5}/>
+      <Dad />
+      <DadIndirect />
+      <Differentiate />
+      <OddEven number={3}/>
+    </SafeAreaView>
+  );
+}
+
+// [...]
+
+export default App;
 ```
