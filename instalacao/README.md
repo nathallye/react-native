@@ -74,8 +74,10 @@ O Android Studio instala o SDK do Android mais recente por padrão. Construir um
 
 - Vamos selecionar a guia "SDK Platforms" no SDK Manager e marcar a caixa ao lado de "Show Package Details" no canto inferior direito. Vamos expandir o `Android 11 (R)` e verificar se os seguintes itens estão marcados:
 
-`Android SDK Platform 30`
-`Intel x86 Atom_64 System Image or Google APIs Intel x86 Atom System Image`
+```
+Android SDK Platform 30 
+Intel x86 Atom_64 System Image or Google APIs Intel x86 Atom System Image
+```
 
 Em seguida, na guia "SDK Tools" vamos marcar a caixa ao lado de "Show Package Details" aqui também. Vamos procurar e expandir a entrada "Android SDK Build-Tools" e verificar se a versão `30.0.2` está selecionada.
 
