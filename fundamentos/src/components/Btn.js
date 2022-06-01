@@ -1,5 +1,7 @@
 import React from "react";
-import { Button } from "react-native";
+import { Text, Button } from "react-native";
+
+import Style from "./style";
 
 const Btn = (props) => {
 
@@ -8,10 +10,13 @@ const Btn = (props) => {
   }
 
   return (
-    <Button 
-      title="Executar"
-      onPress={executar}
-    />
+    <>
+      <Text style={Style.textDefault}>Componente Button</Text>
+      <Button 
+        title="Executar"
+        onPress={executar}
+        />
+    </>
   );
 }
 

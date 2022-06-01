@@ -2,13 +2,13 @@ import { StyleSheet } from "react-native";
 
 export default StyleSheet.create({
   textDefault: {
-    fontSize: 18,
+    fontSize: 12,
     textAlign: "center",
 
     marginTop: 10,
   },
   textSecondary: {
-    fontSize: 16,
+    fontSize: 11,
     textAlign: "center",
 
     marginBottom: 10,

@@ -1707,3 +1707,140 @@ const App = () => {
 
 export default App;
 ```
+
+### Componente com filho(props.children)
+
+Quando quisermos referênciar um componente dentro de outro, vamos usar props.children, para resgatar os filhos que são passados dentro de determinado componente(componentes passados dentro do corpo de outro componente).
+
+- Para entendermos melhor essa relação, dentro de src/components vamos criar uma pasta chamada relação/_relationship_ e nessa pasta vamos criar os componentes funcionais pai/_DadRelationship_ e o filho/_ChildRelationship_. Lembrando que o componente _DadRelationship_ leva a referência do componente filho e nesse caso o filho vai receber do pai via props _name_ e _surname_:
+
+``` JSX
+import React from "react";
+import { Text } from "react-native";
+
+import Style from "../style";
+
+import ChildRelationship from "./ChildRelationship";
+
+const DadRealationship = (props) => {
+  return (
+    <>
+      <Text style={Style.textDefault}>Componente com filhos</Text>
+      <ChildRelationship name="Nathallye" surname="Tavares"/>
+      <ChildRelationship name="Paulo" surname="Bacelar"/>
+    </>
+  );
+}
+
+export default DadRealationship;
+```
+
+``` JSX
+import React, { useState } from "react";
+import { Text } from "react-native";
+
+import Style from "../style";
+
+const ChildRelationship = (props) => {
+  return (
+    <Text style={Style.textDefault}>
+      {props.name} {props.surname}
+    </Text>
+  );
+}
+
+export default ChildRelationship;
+```
+
+- E para visualizarmos isso em tela, vamos importar o componente _DadRealationship_ dentro do componente _App_:
+
+``` JSX
+import React from "react";
+import { StyleSheet, SafeAreaView, Text } from "react-native";
+
+import Style from "./components/style";
+
+import First from "./components/First";
+import MinMax from "./components/MinMax";
+import Random from "./components/Random";
+import Fragment from "./components/Fragment";
+import Btn from "./components/Btn";
+import Counter from "./components/Counter";
+import Dad from "./components/direct/Dad";
+import DadIndirect from "./components/indirect/DadIndirect";
+import Differentiate from "./components/Differentiate";
+import OddEven from "./components/OddEven";
+import DadRealationship from "./components/relationship/DadRelationship";
+
+const App = () => {
+  return (
+    <SafeAreaView style={styles.App}>
+      <Text style={Style.textDefault}>Olá mundo!</Text>
+      <First />
+      <MinMax min={10} max={20} />
+      <Random min={0} max={100}/>
+      <Fragment />
+      <Btn />
+      <Counter initialValue={100} step={5}/>
+      <Dad />
+      <DadIndirect />
+      <Differentiate />
+      <OddEven number={3}/>
+      <DadRealationship />
+    </SafeAreaView>
+  );
+}
+
+// [...]
+
+export default App;
+```
+
+- Mas se quisermos enviar desses dados dos filhos pelo componente principal(_App_)? Vamos importar Tanto o componente Pai quando o seu filho dentro de _App.js_. E vamos enviar as propriedades no componente filho, assim:
+
+``` JSX
+import React from "react";
+import { StyleSheet, SafeAreaView, Text } from "react-native";
+
+import Style from "./components/style";
+
+import DadRealationship from "./components/relationship/DadRelationship";
+import ChildRelationship from "./components/relationship/ChildRelationship";
+
+const App = () => {
+  return (
+    <SafeAreaView style={styles.App}>
+      <DadRealationship>
+        <ChildRelationship name="Nathallye" surname="Tavares"/>
+        <ChildRelationship name="Paulo" surname="Bacelar"/>        
+      </DadRealationship>
+    </SafeAreaView>
+  );
+}
+
+// [...]
+
+export default App;
+```
+
+- E como conseguirmos mostrar o que está sendo enviado dentro do componente _App_? A partir das propriedades/_props_ que estamos recendo como parâmetro dentro do componente _DadRelationship_. Vamos pegar os filhos que estão sendo enviados via props para esse componente(_props.children_):
+
+``` JSX
+import React from "react";
+import { Text } from "react-native";
+
+import Style from "../style";
+
+import ChildRelationship from "./ChildRelationship";
+
+const DadRealationship = (props) => {
+  return (
+    <>
+      <Text style={Style.textDefault}>Componente com filhos</Text>
+      {props.children}
+    </>
+  );
+}
+
+export default DadRealationship;
+```

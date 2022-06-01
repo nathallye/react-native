@@ -16,7 +16,8 @@ const Counter = ({ initialValue = 0, step = 1 }) => {
 
   return (
     <React.Fragment>
-      <Text style={Style.textDefault}>{count}</Text>
+      <Text style={Style.textDefault}>Contador</Text>
+      <Text>{count}</Text>
       <View style={Style.buttons}>
         <View style={Style.button} >
           <Button

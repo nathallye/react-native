@@ -13,6 +13,8 @@ import Dad from "./components/direct/Dad";
 import DadIndirect from "./components/indirect/DadIndirect";
 import Differentiate from "./components/Differentiate";
 import OddEven from "./components/OddEven";
+import DadRealationship from "./components/relationship/DadRelationship";
+import ChildRelationship from "./components/relationship/ChildRelationship";
 
 const App = () => {
   // console.warn("Opa!")
@@ -30,6 +32,10 @@ const App = () => {
       <DadIndirect />
       <Differentiate />
       <OddEven number={3}/>
+      <DadRealationship>
+        <ChildRelationship name="Nathallye" surname="Tavares"/>
+        <ChildRelationship name="Paulo" surname="Bacelar"/>        
+      </DadRealationship>
     </SafeAreaView>
   );
 }
