@@ -15,17 +15,19 @@ import Differentiate from "./components/Differentiate";
 import OddEven from "./components/OddEven";
 import DadRealationship from "./components/relationship/DadRelationship";
 import ChildRelationship from "./components/relationship/ChildRelationship";
+import ListProducts from "./components/products/ListProducts";
+import ListProductsV2 from "./components/products/ListProductsV2";
 
 const App = () => {
   // console.warn("Opa!")
 
   return (
     <SafeAreaView style={styles.App}>
-      <Text style={Style.textDefault}>Olá mundo!</Text>
+      {/* <Text style={Style.textDefault}>Olá mundo!</Text>
       <First />
       <MinMax min={10} max={20} />
       <Random min={0} max={100}/>
-      <Fragment />
+      <Fragment /> */}
       <Btn />
       <Counter initialValue={100} step={5}/>
       <Dad />
@@ -36,6 +38,8 @@ const App = () => {
         <ChildRelationship name="Nathallye" surname="Tavares"/>
         <ChildRelationship name="Paulo" surname="Bacelar"/>        
       </DadRealationship>
+      <ListProducts />
+      <ListProductsV2 />
     </SafeAreaView>
   );
 }

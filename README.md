@@ -1844,3 +1844,454 @@ const DadRealationship = (props) => {
 
 export default DadRealationship;
 ```
+
+### Renderizando Lista #01
+
+- Para entendermos melhor, em src/components vamos criar pasta chamada _products_ e dentro dela um arquivo js chamado _products_.
+
+- Nesse arquivo vamos retornar um array de objetos e vamos exportá-lo por padrão:
+
+``` JS
+export default [
+  { id: 1, name: "Caderno", price: 19.99 },
+  { id: 2, name: "Caneta", price: 1.99 },
+  { id: 3, name: "Lápis", price: 1.99 },
+  { id: 4, name: "Borracha", price: 1.20 },
+  { id: 5, name: "Apontador", price: 3.99 }
+]
+```
+
+- Temos os dados, e a idéia é transformar esses dados em elementos visuais na tela. Para isso, em src/components/products vamos criar um componente funcional chamando _ListProducts_:
+
+``` JSX
+import React from "react";
+import { Text } from "react-native";
+
+import Style from "../style";
+
+const ListProducts = () => {
+  return (
+    <Text style={Style.textDefault}>
+      Lista de Produtos
+    </Text>
+  );
+}
+
+export default ListProducts;
+```
+
+- E para visualizarmos em tela as alterações, vamos importar o componente _ListProducts_ dentro do componente _App_:
+
+``` JSX
+import React from "react";
+import { StyleSheet, SafeAreaView, Text } from "react-native";
+
+import Style from "./components/style";
+
+import First from "./components/First";
+import MinMax from "./components/MinMax";
+import Random from "./components/Random";
+import Fragment from "./components/Fragment";
+import Btn from "./components/Btn";
+import Counter from "./components/Counter";
+import Dad from "./components/direct/Dad";
+import DadIndirect from "./components/indirect/DadIndirect";
+import Differentiate from "./components/Differentiate";
+import OddEven from "./components/OddEven";
+import DadRealationship from "./components/relationship/DadRelationship";
+import ChildRelationship from "./components/relationship/ChildRelationship";
+import ListProducts from "./components/products/ListProducts";
+
+const App = () => {
+  return (
+    <SafeAreaView style={styles.App}>
+      <Text style={Style.textDefault}>Olá mundo!</Text>
+      <First />
+      <MinMax min={10} max={20} />
+      <Random min={0} max={100}/>
+      <Fragment />
+      <Btn />
+      <Counter initialValue={100} step={5}/>
+      <Dad />
+      <DadIndirect />
+      <Differentiate />
+      <OddEven number={3}/>
+      <DadRealationship>
+        <ChildRelationship name="Nathallye" surname="Tavares"/>
+        <ChildRelationship name="Paulo" surname="Bacelar"/>        
+      </DadRealationship>
+      <ListProducts />
+    </SafeAreaView>
+  );
+}
+
+// [...]
+
+export default App;
+```
+
+- Agora, dentro do componente _ListProducts_ vamos importar o arquivo com os produtos(_products.js_).:
+
+``` JSX
+import React from "react";
+import { Text } from "react-native";
+
+import Style from "../style";
+
+import products from "./products";
+
+const ListProducts = () => {
+  return (
+    <Text style={Style.textDefault}>
+      Lista de Produtos
+    </Text>
+    
+  );
+}
+
+export default ListProducts;
+```
+
+Em seguida, para percorrer essa lista de produtos/_products_ e renderizar em tela, vamos utilizar o método _map_(transforma um array em um novo array com elementos modificados). E para esse _map_ para cada produto percorrido/_product_ vamos passar uma função que vai retornar um trecho JSX interpolando as informações do produto.
+Com isso, ele vai transformar o array de objetos, em um novo array com trechos JSX:
+
+``` JSX
+import React from "react";
+import { Text } from "react-native";
+
+import Style from "../style";
+
+import products from "./products";
+
+const ListProducts = () => {
+  return (
+    <>
+      <Text style={Style.textDefault}>
+        Lista de Produtos
+      </Text>
+
+      {products.map(product => {
+        return (
+          <Text>{product.id}) {product.name} tem preço R${product.price}</Text>
+        )
+      })}
+
+    </>
+  );
+}
+
+export default ListProducts;
+```
+
+- A lista está sendo renderizada, mas no log podemos notar a seguinte advertência "Each child in a list should have a unique "key" prop", isso ocorre, pois sempre que geramos uma lista de elementos o React solicita que seja definido o atributo _key_ que deve ter um valor único, para caso ocorra alguma mudança o React consegue de forma muito precisa alterar apenas aquele elemento modificado. Nesse caso podemos usar o _id_ do _product_:
+
+``` JSX
+import React from "react";
+import { Text } from "react-native";
+
+import Style from "../style";
+
+import products from "./products";
+
+const ListProducts = () => {
+  return (
+    <>
+      <Text style={Style.textDefault}>
+        Lista de Produtos
+      </Text>
+
+      {products.map(product => {
+        return (
+          <Text key={product.id}>
+            {product.id}) {product.name} tem preço R${product.price}
+          </Text>
+        )
+      })}
+
+    </>
+  );
+}
+
+export default ListProducts;
+```
+
+- Outra forma de exibir essa lista é criando uma função, chamada de _getList_ por exemplo, e dentro dela podemos retornar o _map_ no array de objetos _products_, o qual para cada elemento/_product_ que ele percorrer vai ser passada uma função que vai retornar um trecho JSX interpolando as informações do produto.
+E dentro do JSX vamos chamar essa função. Essa função vai ser chamada no momento em que o componente for renderizado:
+
+``` JSX
+import React from "react";
+import { Text } from "react-native";
+
+import Style from "../style";
+
+import products from "./products";
+
+const ListProducts = () => {
+
+  function getList() {
+    return products.map(product => {
+      return (
+        <Text key={product.id} style={Style.textSecondary}>
+          {product.id}) {product.name} tem preço R${product.price}
+        </Text>
+      )
+    })
+  }
+
+  return (
+    <React.Fragment>
+      <Text style={Style.textDefault}>
+        Lista de Produtos
+      </Text>
+
+      {getList()}
+    </React.Fragment>
+  );
+}
+
+export default ListProducts;
+```
+
+### Renderizando Lista com o Componente FlatList
+
+- Para entendermos melhor como funciona esse componente, vamos duplicar o componente _ListProducts_ e renomear a cópia para _ListProductsV2_:
+
+``` JSX
+import React from "react";
+import { Text } from "react-native";
+
+import Style from "../style";
+
+import products from "./products";
+
+const ListProductsV2 = () => {
+
+  return (
+    <React.Fragment>
+      <Text style={Style.textDefault}>
+        Lista de Produtos V2
+      </Text>
+    </React.Fragment>
+  );
+}
+
+export default ListProductsV2;
+```
+
+- E em seguida, vamos importar esse novo componente dentro do componente principal _App.js_:
+
+``` JSX
+import React from "react";
+import { StyleSheet, SafeAreaView, Text } from "react-native";
+
+import Style from "./components/style";
+
+import First from "./components/First";
+import MinMax from "./components/MinMax";
+import Random from "./components/Random";
+import Fragment from "./components/Fragment";
+import Btn from "./components/Btn";
+import Counter from "./components/Counter";
+import Dad from "./components/direct/Dad";
+import DadIndirect from "./components/indirect/DadIndirect";
+import Differentiate from "./components/Differentiate";
+import OddEven from "./components/OddEven";
+import DadRealationship from "./components/relationship/DadRelationship";
+import ChildRelationship from "./components/relationship/ChildRelationship";
+import ListProducts from "./components/products/ListProducts";
+import ListProductsV2 from "./components/products/ListProductsV2";
+
+const App = () => {
+  return (
+    <SafeAreaView style={styles.App}>
+      <Text style={Style.textDefault}>Olá mundo!</Text>
+      <First />
+      <MinMax min={10} max={20} />
+      <Random min={0} max={100}/>
+      <Fragment />
+      <Btn />
+      <Counter initialValue={100} step={5}/>
+      <Dad />
+      <DadIndirect />
+      <Differentiate />
+      <OddEven number={3}/>
+      <DadRealationship>
+        <ChildRelationship name="Nathallye" surname="Tavares"/>
+        <ChildRelationship name="Paulo" surname="Bacelar"/>        
+      </DadRealationship>
+      <ListProducts />
+      <ListProductsV2 />
+    </SafeAreaView>
+  );
+}
+
+// [...]
+
+export default App;
+```
+
+- Agora, voltando no componente _ListProductsV2_ vamos importar o componente _FlatList_ do react native e referênciá-lo:
+
+``` JSX
+import React from "react";
+import { FlatList, Text } from "react-native";
+
+import Style from "../style";
+
+import products from "./products";
+
+const ListProductsV2 = () => {
+
+  return (
+    <React.Fragment>
+      <Text style={Style.textDefault}>
+        Lista de Produtos V2
+      </Text>
+      <FlatList />
+    </React.Fragment>
+  );
+}
+
+export default ListProductsV2;
+```
+
+- Será necessário passar alguns atributos para ele... o atributo _data_ que serão os dados, nesse caso são os produtos/_products_, definido esse atributo _data_ podemos definir o atributo _renderItem_... o atributo _renderItem_ vai receber uma função(pode ser uma arrow function), e essa função vai receber uma atributo e dentro desse atributo teremos o _item_({item}) que será percorrido na lista:
+
+``` JSX
+import React from "react";
+import { FlatList, Text } from "react-native";
+
+import Style from "../style";
+
+import products from "./products";
+
+const ListProductsV2 = () => {
+
+  return (
+    <React.Fragment>
+      <Text style={Style.textDefault}>
+        Lista de Produtos V2
+      </Text>
+
+      <FlatList 
+        data={products}
+        renderItem={({ item: product }) => { // podemos alterar o nome do atributo item para product, por exemplo.
+          
+        }}
+      />
+    </React.Fragment>
+  );
+}
+
+export default ListProductsV2;
+```
+
+- Por fim, a função vai retornar/_return_ o JSX concatenando as informações de _item_/_product_:
+
+``` JSX
+import React from "react";
+import { FlatList, Text } from "react-native";
+
+import Style from "../style";
+
+import products from "./products";
+
+const ListProductsV2 = () => {
+
+  return (
+    <React.Fragment>
+      <Text style={Style.textDefault}>
+        Lista de Produtos V2
+      </Text>
+
+      <FlatList 
+        data={products}
+        renderItem={({ item: product }) => { 
+          return (
+            <Text style={Style.textSecondary}>
+              {product.id}) {product.name} tem preço R${product.price}
+            </Text>
+          )      
+        }}
+      />
+    </React.Fragment>
+  );
+}
+
+export default ListProductsV2;
+```
+
+- Também vamos precisar irformar uma chave/_key_ por meio do atributo _keyExtractor_, que na verdade é uma função, e basicamente essa função vai receber o item/_i_ e vai retornar o que será a chave, nesse caso será o _id_(_i.id_). Nesse caso, ele vai reclamar, pois espera um valor do tipo _string_ e para contornar isso podemos interpolar o valor _i.id_:
+
+``` JSX
+import React from "react";
+import { FlatList, Text } from "react-native";
+
+import Style from "../style";
+
+import products from "./products";
+
+const ListProductsV2 = () => {
+
+  return (
+    <React.Fragment>
+      <Text style={Style.textDefault}>
+        Lista de Produtos V2
+      </Text>
+
+      <FlatList 
+        data={products}
+        // keyExtractor={i => i.id}
+        keyExtractor={i => `${i.id}`}
+        renderItem={({ item: product }) => { 
+          return (
+            <Text style={Style.textSecondary}>
+              {product.id}) {product.name} tem preço R${product.price}
+            </Text>
+          )      
+        }}
+      />
+    </React.Fragment>
+  );
+}
+
+export default ListProductsV2;
+```
+
+- Podemos também abstrair tudo que está dentro do atributo _renderItem_ para uma função e em seguida chamar ela dentro dele:
+
+``` JSX
+import React from "react";
+import { FlatList, Text } from "react-native";
+
+import Style from "../style";
+
+import products from "./products";
+
+const ListProductsV2 = () => {
+
+  const renderProduct = ({ item: product }) => { 
+    return (
+      <Text style={Style.textSecondary}>
+        {product.id}) {product.name} tem preço R${product.price}
+      </Text>
+    )      
+  }
+
+  return (
+    <React.Fragment>
+      <Text style={Style.textDefault}>
+        Lista de Produtos V2
+      </Text>
+
+      <FlatList 
+        data={products}
+        keyExtractor={i => `${i.id}`}
+        renderItem={renderProduct}
+      />
+    </React.Fragment>
+  );
+}
+
+export default ListProductsV2;
+```
