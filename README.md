@@ -2295,3 +2295,245 @@ const ListProductsV2 = () => {
 
 export default ListProductsV2;
 ```
+
+### Componente Controlado
+
+- Para entendermos melhor como funciona um componente controlado, dentro da pasta componentes vamos criar um componente funcional chamado _Input_:
+
+``` JSX
+import React from "react";
+import { View } from "react-native";
+
+import Style from "./style";
+
+const Input = (props) => {
+  return (
+    <View>
+      
+    </View>
+  );
+}
+
+export default Input;
+```
+
+- Em seguida, para visualizarmos em tela, vamos importar esse componente dentro do arquivo de renderização principal(_App.js_):
+
+``` JSX
+import React from "react";
+import { StyleSheet, SafeAreaView, Text } from "react-native";
+
+import Style from "./components/style";
+
+// [...]
+import Input from "./components/Input";
+
+const App = () => {
+  return (
+    <SafeAreaView style={styles.App}>
+      {/*...*/}
+
+      <Input />
+    </SafeAreaView>
+  );
+}
+
+// [...]
+
+export default App;
+```
+
+- Vamos importar o componente _TextInput_ e referênciá-lo dentro da _View_ desse componente funcional _Input_.
+O _TextInput_ é um componente fundamental para inserir texto no aplicativo por meio de um teclado. Adereços fornecem configuração para vários recursos, como correção automática, capitalização automática, texto de espaço reservado e diferentes tipos de teclado, como um teclado numérico:
+
+``` JSX
+import React from "react";
+import { TextInput, View } from "react-native";
+
+import Style from "./style";
+
+const Input = (props) => {
+  return (
+    <View>
+      <TextInput />
+    </View>
+  );
+}
+
+export default Input;
+```
+
+- Vamos definir algumas propriedades nesse _TextInput_, como o _placeholder_ para criar um campo que já conseguimos inserir dados.
+Agora, temos aqui inicialmente um componente não controlado:
+
+``` JSX
+import React from "react";
+import { TextInput, View } from "react-native";
+
+import Style from "./style";
+
+const Input = (props) => {
+  return (
+    <View>
+      <TextInput 
+        placeholder="Digite seu nome"
+      />
+    </View>
+  );
+}
+
+export default Input;
+```
+
+- E para criarmos um componente controlado. No componente _Input_ vamos definir uma variável com estato. Vamos importar o _useState_ do React e criar uma variável com o destructuring, sendo que a primeira posição vai receber o valor inicial e a segunda posição vai receber a função _set_ para alterar a variável. 
+Em seguida, podemos inserir no _TextInput_ o atributo _value_ que vai receber a variável de estado _state_:
+
+``` JSX
+import React, { useState } from "react";
+import { TextInput, View } from "react-native";
+
+import Style from "./style";
+
+const Input = (props) => {
+  const [state, setState] = useState("Teste");
+
+  return (
+    <View>
+      <TextInput 
+        placeholder="Digite seu nome"
+        value={state}
+      />
+    </View>
+  );
+}
+
+export default Input;
+```
+
+- Podemos notar no Android Studio o componente _Input_ está com o valor que definimos inicialmente. Mas como é um componente controlado não conseguimos alterar o valor do input. O que ele chama de verdade absoluta são os dados, ou seja, o estado do componente não mudou, não foi chamada em nenhum momento a função _setState_ para mudar o dado. Resumindo, não conseguimos mudar o estado de um componente diretamente a partir da interface, primeiro temos que mudar o estado, para quando esse estado mudar aí sim conseguimos refletir essa mudança na interface gráfica. O caminho é unidirecional, o estado muda e altera a interface gráfica. A interface gráfica não altera o estado(isso acontece indiretamente a partir dos eventos).
+
+- Então, nesse caso, como conseguimos alterar o valor do input? Podemos mudar ele pegando o evento _onChangeText_, esse evento vai ser chamado toda vez que digitarmos. E esse evento vai receber como parâmentro exatamente o texto atual(que está dentro de _state_) que vai chamar por uma função arrow a função callback _setState_ e passar para ela o estado atual/_state_:
+
+``` JSX
+import React, { useState } from "react";
+import { TextInput, View } from "react-native";
+
+import Style from "./style";
+
+const Input = (props) => {
+  const [state, setState] = useState("Teste");
+
+  return (
+    <View>
+      <TextInput 
+        placeholder="Digite seu nome"
+        value={state}
+        onChangeText={state => setState(state)}
+      />
+    </View>
+  );
+}
+
+export default Input;
+```
+
+### Flexbox
+
+Um elemento passa a ser um flexbox quando marcamos com a propriedade _display: flex_ e ele passa a ser um _flex-container_.
+
+[image!](x-special/nautilus-clipboardcopyfile:///home/nathallye/Downloads/WhatsApp%20Image%202022-06-09%20at%2016.07.25.jpeg)
+
+Dentro desse container temos os _flex items_.
+O eixo principal desse container chamamos de _main axis_ e o eixo adjacente/alternativo/do outro sentido _cross axis_.
+
+### Componente Quadrado
+
+- Para facilitar o entendimento, dentro de src/components vamos criar uma pasta chamada _layout_ e dentro dela vamos criar um componente funcional chamado Quadrado/_Square_:
+
+``` JSX
+import React from "react";
+import { View } from "react-native";
+
+import Style from "./style";
+
+const Square = (props) => {
+  return (
+    <View>
+
+    </View>
+  );
+}
+
+export default Square;
+```
+
+- Em seguida, vamos aplicar a propriedade _style_ na _View_ que vai receber um obejto de estilo e nele vamos definir o _height_ e _width_ de 20 para o elemento ficar quadrado e um _blackground_ para visualizarmos melhor:
+
+``` JSX
+import React from "react";
+import { View } from "react-native";
+
+const Square = (props) => {
+  return (
+    <View style={{
+      height: 20,
+      width: 20, 
+      backgroundColor: "#000"
+    }}
+    />
+  );
+}
+
+export default Square;
+```
+
+- Só que, vamos receber a cor do componente via props e caso não seja passada a cor/_color_, vai ser usada a cor default:
+
+``` JSX
+import React from "react";
+import { View } from "react-native";
+
+const Square = (props) => {
+  return (
+    <View style={{
+      height: 20,
+      width: 20, 
+      backgroundColor: props.color || "#000"
+    }}
+    />
+  );
+}
+
+export default Square;
+```
+
+- Vamos importar esse componente _Square_ dentro do componente de renderização principal e passar a cor/_color_ via props:
+
+``` JSX
+import React from "react";
+import { StyleSheet, SafeAreaView, Text } from "react-native";
+
+import Style from "./components/style";
+
+// [...]
+import Square from "./components/layout/Square";
+
+const App = () => {
+  return (
+    <SafeAreaView style={styles.App}>
+      {/*...*/}
+      <ListProducts />
+      <ListProductsV2 />
+      <Input />
+      <Square />
+      <Square color="#900"/>
+      <Square color="#090"/>
+      <Square color="#009"/>
+    </SafeAreaView>
+  );
+}
+
+// [...]
+
+export default App;
+```

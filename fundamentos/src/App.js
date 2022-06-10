@@ -17,6 +17,8 @@ import DadRealationship from "./components/relationship/DadRelationship";
 import ChildRelationship from "./components/relationship/ChildRelationship";
 import ListProducts from "./components/products/ListProducts";
 import ListProductsV2 from "./components/products/ListProductsV2";
+import Input from "./components/Input";
+import Square from "./components/layout/Square";
 
 const App = () => {
   // console.warn("Opa!")
@@ -27,7 +29,7 @@ const App = () => {
       <First />
       <MinMax min={10} max={20} />
       <Random min={0} max={100}/>
-      <Fragment /> */}
+      <Fragment />
       <Btn />
       <Counter initialValue={100} step={5}/>
       <Dad />
@@ -37,9 +39,14 @@ const App = () => {
       <DadRealationship>
         <ChildRelationship name="Nathallye" surname="Tavares"/>
         <ChildRelationship name="Paulo" surname="Bacelar"/>        
-      </DadRealationship>
+      </DadRealationship> 
       <ListProducts />
       <ListProductsV2 />
+      <Input /> */}
+      <Square />
+      <Square color="#900"/>
+      <Square color="#090"/>
+      <Square color="#009"/>
     </SafeAreaView>
   );
 }
