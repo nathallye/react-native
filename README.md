@@ -2467,7 +2467,7 @@ const Square = (props) => {
 export default Square;
 ```
 
-- Em seguida, vamos aplicar a propriedade _style_ na _View_ que vai receber um obejto de estilo e nele vamos definir o _height_ e _width_ de 20 para o elemento ficar quadrado e um _blackground_ para visualizarmos melhor:
+- Em seguida, vamos aplicar a propriedade _style_ na _View_ que vai receber um obejto de estilo e nele vamos definir o _height_ e _width_ de 50 para o elemento ficar quadrado e um _blackground_ para visualizarmos melhor:
 
 ``` JSX
 import React from "react";
@@ -2476,8 +2476,8 @@ import { View } from "react-native";
 const Square = (props) => {
   return (
     <View style={{
-      height: 20,
-      width: 20, 
+      height: 50,
+      width: 50, 
       backgroundColor: "#000"
     }}
     />
@@ -2496,8 +2496,8 @@ import { View } from "react-native";
 const Square = (props) => {
   return (
     <View style={{
-      height: 20,
-      width: 20, 
+      height: 50,
+      width: 50, 
       backgroundColor: props.color || "#000"
     }}
     />
@@ -2525,10 +2525,11 @@ const App = () => {
       <ListProducts />
       <ListProductsV2 />
       <Input />
-      <Square />
-      <Square color="#900"/>
-      <Square color="#090"/>
-      <Square color="#009"/>
+      <Square color="#ff801a"/>
+      <Square color="#50d1f6"/>
+      <Square color="#dd22c1"/>
+      <Square color="#8312ed"/>
+      <Square color="#36c9a7"/>
     </SafeAreaView>
   );
 }
@@ -2536,4 +2537,1543 @@ const App = () => {
 // [...]
 
 export default App;
+```
+
+### Usando Flexbox #01
+
+- Dentro de src/components/layout vamos criar um componente funcional chamado _FlexboxV1_:
+
+``` JSX
+import React from "react";
+import { View } from "react-native";
+
+const FlexboxV1 = (props) => {
+  return (
+    <View>
+
+    </View>
+  );
+}
+
+export default FlexboxV1;
+```
+
+- Em seguida, vamos mover de dentro de App.js os componentes _Square_(vamos importar o componente _Square_ para que tudo ocorra sem erros):
+
+``` JSX
+import React from "react";
+import { View } from "react-native";
+
+import Square  from "./Square";
+
+const FlexboxV1 = (props) => {
+  return (
+    <View>
+      <Square color="#ff801a"/>
+      <Square color="#50d1f6"/>
+      <Square color="#dd22c1"/>
+      <Square color="#8312ed"/>
+      <Square color="#36c9a7"/>
+    </View>
+  );
+}
+
+export default FlexboxV1;
+```
+
+- Após isso, vamos importar o _StyleSheet_ do react native dentro desse componente  _FlexboxV1_.
+E criar um objeto de estilo que vamos armazenar dentro da constante chamada _styles_ e dentro desse objeto de _styles_ vamos criar um objeto com o nome _FlexV1_ que vamos referênciar através do _style_ dentro da _View_:
+
+``` JSX
+import React from "react";
+import { StyleSheet, View } from "react-native";
+
+import Square  from "./Square";
+
+const FlexboxV1 = (props) => {
+  return (
+    <View style={styles.FlexV1}>
+      <Square color="#ff801a"/>
+      <Square color="#50d1f6"/>
+      <Square color="#dd22c1"/>
+      <Square color="#8312ed"/>
+      <Square color="#36c9a7"/>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  FlexV1: {
+    
+  }
+});
+
+export default FlexboxV1;
+```
+
+- E dentro do componente de renderização principal vamos importar esse componente _FlexboxV1_ no lugar de onde estava o componente _Square_:
+
+``` JSX
+import React from "react";
+import { StyleSheet, SafeAreaView, Text } from "react-native";
+
+import Style from "./components/style";
+
+// [...]
+// import Square from "./components/layout/Square";
+import FlexboxV1 from "./components/layout/FlexboxV1";
+
+const App = () => {
+  return (
+    <SafeAreaView style={styles.App}>
+      {/* ... */}
+      <FlexboxV1 />
+    </SafeAreaView>
+  );
+}
+
+// [...]
+
+export default App;
+```
+
+#### Propriedade flex 1 ou flexGrow 1
+
+- Antes de tudo, vamos aplicar um backgroundColor _black_ no objeto _FlexV1_ que vai refletir na _View_ para visualizarmos melhor as alterações:
+
+``` JSX
+import React from "react";
+import { StyleSheet, View } from "react-native";
+
+import Square  from "./Square";
+
+const FlexboxV1 = (props) => {
+  return (
+    <View style={styles.FlexV1}>
+      <Square color="#ff801a"/>
+      <Square color="#50d1f6"/>
+      <Square color="#dd22c1"/>
+      <Square color="#8312ed"/>
+      <Square color="#36c9a7"/>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  FlexV1: {
+    backgroundColor: "black",
+  }
+});
+
+export default FlexboxV1;
+```
+
+- Quando usamos a propriedade _flex 1_ ou _flexGrow 1_ significa que essa View/container vai crescer até ocupar todo espaço disponível em tela:
+
+``` JSX
+import React from "react";
+import { StyleSheet, View } from "react-native";
+
+import Square  from "./Square";
+
+const FlexboxV1 = (props) => {
+  return (
+    <View style={styles.FlexV1}>
+      <Square color="#ff801a"/>
+      <Square color="#50d1f6"/>
+      <Square color="#dd22c1"/>
+      <Square color="#8312ed"/>
+      <Square color="#36c9a7"/>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  FlexV1: {
+    backgroundColor: "black",
+    flex: 1,
+  }
+});
+
+export default FlexboxV1;
+```
+
+#### justifyContent
+
+- Para trabalharmos com alinhamento em relação ao Eixo Principal/_main axis_(que nesse caso é a coluna/_column_) usamos o _justifyContent_. E essa propriedade tem algumas possibilidades, o padrão é o _flex-start_ que alinha os elementos/_flex items_ ao início do container(de cima para baixo), se usarmos o _flex-end_ todos serão alinhados ao final do container(de baixo para cima), e o _space-evenly_ vai separar os _items_ e espassar eles de forma igualitária(incluindo espaçamento no inicio e no fim):
+
+``` JSX
+import React from "react";
+import { StyleSheet, View } from "react-native";
+
+import Square  from "./Square";
+
+const FlexboxV1 = (props) => {
+  return (
+    <View style={styles.FlexV1}>
+      <Square color="#ff801a"/>
+      <Square color="#50d1f6"/>
+      <Square color="#dd22c1"/>
+      <Square color="#8312ed"/>
+      <Square color="#36c9a7"/>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  FlexV1: {
+    backgroundColor: "black",
+
+    flex: 1,
+    justifyContent: "space-evenly",
+  }
+});
+
+export default FlexboxV1;
+```
+
+### Usando Flexbox #02
+
+- Dentro de src/components/layout vamos criar um componente funcional chamado _FlexboxV2_:
+
+``` JSX
+import React from "react";
+import { StyleSheet, View } from "react-native";
+
+import Square  from "./Square";
+
+const FlexboxV2 = (props) => {
+  return (
+    <View style={styles.FlexV2}>
+      <Square color="#ff801a"/>
+      <Square color="#50d1f6"/>
+      <Square color="#dd22c1"/>
+      <Square color="#8312ed"/>
+      <Square color="#36c9a7"/>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  FlexV2: {
+    backgroundColor: "black",
+  }
+});
+
+export default FlexboxV2;
+```
+
+- E dentro do componente de renderização principal vamos importar esse componente _FlexboxV2_ no lugar de onde estava o componente _FlexboxV1_:
+
+``` JSX
+import React from "react";
+import { StyleSheet, SafeAreaView } from "react-native";
+
+import Style from "./components/style";
+
+// [...]
+// import Square from "./components/layout/Square";
+import FlexboxV1 from "./components/layout/FlexboxV1";
+import FlexboxV2 from "./components/layout/FlexboxV2";
+
+const App = () => {
+  return (
+    <SafeAreaView style={styles.App}>
+      {/* ... */}
+      <FlexboxV2 />
+    </SafeAreaView>
+  );
+}
+
+// [...]
+
+export default App;
+```
+
+- E para visualizarmos melhor como podemos organizar os elementos no eixo cruzado/_cross axis_(que nesse caso é no eixo da linha/_row_) vamos inserir uma largura/_width_ de 100%:
+
+``` JSX
+import React from "react";
+import { StyleSheet, View } from "react-native";
+
+import Square  from "./Square";
+
+const FlexboxV2 = (props) => {
+  return (
+    <View style={styles.FlexV2}>
+      <Square color="#ff801a"/>
+      <Square color="#50d1f6"/>
+      <Square color="#dd22c1"/>
+      <Square color="#8312ed"/>
+      <Square color="#36c9a7"/>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  FlexV2: {
+    backgroundColor: "black",
+
+    width: "100%",
+  }
+});
+
+export default FlexboxV2;
+```
+
+#### alignItemns
+
+E para mecher no alinhamento dos elementos/_flex items_ no eixo cruzado/_cross axis_(que nesse caso é no eixo da linha/_row_) vamos usar a propriedade _alingItems_. E essa propriedade tem algumas possibilidades, o padrão é o _flex-start_ que alinha os elementos/_flex items_ ao início do container(da direita pra esquerda), e o _flex-end_ irá alinhar os elementos ao final do container(no final da linha) e o _center_ ao centro:
+
+``` JSX
+import React from "react";
+import { StyleSheet, View } from "react-native";
+
+import Square  from "./Square";
+
+const FlexboxV2 = (props) => {
+  return (
+    <View style={styles.FlexV2}>
+      <Square color="#ff801a"/>
+      <Square color="#50d1f6"/>
+      <Square color="#dd22c1"/>
+      <Square color="#8312ed"/>
+      <Square color="#36c9a7"/>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  FlexV2: {
+    backgroundColor: "black",
+
+    width: "100%",
+    alignItems: "center",
+  }
+});
+
+export default FlexboxV2;
+```
+
+### Usando Flexbox #03
+
+- Dentro de src/components/layout vamos criar um componente funcional chamado _FlexboxV3_:
+
+``` JSX
+import React from "react";
+import { StyleSheet, View } from "react-native";
+
+import Square  from "./Square";
+
+const FlexboxV3 = (props) => {
+  return (
+    <View style={styles.FlexV3}>
+      <Square color="#ff801a"/>
+      <Square color="#50d1f6"/>
+      <Square color="#dd22c1"/>
+      <Square color="#8312ed"/>
+      <Square color="#36c9a7"/>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  FlexV3: {
+    backgroundColor: "black",
+
+  }
+});
+
+export default FlexboxV3;
+```
+
+- E dentro do componente de renderização principal vamos importar esse componente _FlexboxV3_ no lugar de onde estava o componente _FlexboxV2_:
+
+``` JSX
+import React from "react";
+import { StyleSheet, SafeAreaView } from "react-native";
+
+import Style from "./components/style";
+
+// ...
+import FlexboxV3 from "./components/layout/FlexboxV3";
+
+const App = () => {
+  return (
+    <SafeAreaView style={styles.App}>
+      {/* ... */}
+      <FlexboxV3 />
+    </SafeAreaView>
+  );
+}
+
+// [...]
+
+export default App;
+```
+
+#### flexDirection 
+
+- Essa propriedade vai definir qual o eixo principal do container(no caso do mobile o eixo principal por padrão é a coluna/_column_):
+
+``` JSX
+import React from "react";
+import { StyleSheet, View } from "react-native";
+
+import Square  from "./Square";
+
+const FlexboxV3 = (props) => {
+  return (
+    <View style={styles.FlexV3}>
+      <Square color="#ff801a"/>
+      <Square color="#50d1f6"/>
+      <Square color="#dd22c1"/>
+      <Square color="#8312ed"/>
+      <Square color="#36c9a7"/>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  FlexV3: {
+    backgroundColor: "black",
+
+    height: 350, // para melhorar a visualização do container
+    width: "100%", // para melhorar a visualização do container
+
+    flexDirection: "row",
+  }
+});
+
+export default FlexboxV3;
+```
+
+### Componente de Classe: Método Render
+
+Classe, nada mais é que uma forma diferente de escreve função.
+
+Para entendermos melhor como funciona um componente baseado em classe, dentro da pasta src/components vamos criar uma pasta chamada _componente-class_ e dentro dela vamos criar um componente chamado Megasena.js.
+
+- Vamos inserir dentro do Componete a extrutura básica de um Componente baseado em Classe: 
+
+``` JSX
+import React, { Component } from "react";
+import { Text } from "react-native";
+
+import Style from "../style";
+
+class Megasena extends Component { // se não quisermos importar o Component do react podemos usar o React.Component
+  
+}
+
+export default Megasena;
+```
+
+- Vale ressaltar que a função render é obrigatória em um componente baseado em classe para renderizar algo na tela:
+
+``` JSX
+import React, { Component } from "react";
+import { Text } from "react-native";
+
+import Style from "../style";
+
+class Megasena extends Component { // se não quisermos importar o Component do react podemos usar o React.Component
+  
+}
+
+export default Megasena;
+```
+
+- E para visualizarmos em tela vamos importar esse componente baseado em classe no componente de renderização principal da nossa aplicação(App):
+
+``` JSX
+import React from "react";
+import { StyleSheet, SafeAreaView } from "react-native";
+
+import Style from "./components/style";
+
+// [...]
+import Megasena from "./components/componente-class/Megasena";
+
+const App = () => {
+  return (
+    <SafeAreaView style={styles.App}>
+      {/* ... */}
+      <Megasena />
+    </SafeAreaView>
+  );
+}
+
+// [...]
+
+export default App;
+```
+
+### Componente de Classe: Passando Props
+
+- Vamos passar para esse componente a quanridade de números que serão sorteados na megasena, então em App.js na referência ao componente _Megasena_ vamos passar um atributo _quantNumeros_:
+
+``` JSX
+import React from "react";
+import { StyleSheet, SafeAreaView } from "react-native";
+
+import Style from "./components/style";
+
+// [...]
+import Megasena from "./components/componente-class/Megasena";
+
+const App = () => {
+  return (
+    <SafeAreaView style={styles.App}>
+      {/* ... */}
+      <Megasena quantNumeros={7}/>
+    </SafeAreaView>
+  );
+}
+```
+
+- E agora, como podemos pegar essa propriedade que foi passada para o nosso componente baseado em classe? 
+Podemos acessar ele a partir de _props_, só que **não diretamente props**, vamos usar o _this.props_, ou seja, **as propriedades que pertecem a instância dessa classe(this aponta para a instância/objeto atual)**:
+
+``` JSX
+import React, { Component } from "react";
+import { Text } from "react-native";
+
+import Style from "../style";
+
+class Megasena extends Component {
+  render() {
+    return (
+      <React.Fragment>
+        <Text>Componente baseado em Classe!</Text>
+        <Text>Quantidade de Números para Sortear: {this.props.quantNumeros}</Text>
+      </React.Fragment>
+    );
+  }
+}
+
+export default Megasena;
+```
+
+### Componente de Classe: Estado
+
+- E como definimos estado dentro de um componente baseado em classe? 
+Podemos definir o _state_ como propriedade e essa propriedade pode ser definida como um _objeto_(no caso da função também podemos ter um objeto, usando o hook useState e atribuir um objeto dentro dele). 
+Aqui no caso temos um único estado que é o state acessando-o a partir da classe, e dentro dele vamos colocar todos os atributos necessários para nossa megasena. Inicialmente, o _state_ vai ter a _quantNumeros_ e ele vai inicializar com o valor que recebemos via _this.props_:
+
+``` JSX
+import React, { Component } from "react";
+import { Text } from "react-native";
+
+import Style from "../style";
+
+class Megasena extends Component {
+
+  state = {
+    quantNumeros: this.props.quantNumeros,
+  }
+
+  render() {
+    return (
+      <React.Fragment>
+        <Text>Componente baseado em Classe!</Text>
+        <Text>Quantidade de Números para Sortear: {this.props.quantNumeros}</Text>
+      </React.Fragment>
+    );
+  }
+}
+
+export default Megasena;
+```
+
+- E onde estamos renderizando diretamente o valor que recebemos a partir de _this.props.quantNumeros_ vamos passar a renderizar o valor de dentro do _state_ por meio do _this.state.quantNumeros_:
+
+``` JSX
+import React, { Component } from "react";
+import { Text } from "react-native";
+
+import Style from "../style";
+
+class Megasena extends Component {
+
+  state = {
+    quantNumeros: this.props.quantNumeros,
+  }
+
+  render() {
+    return (
+      <React.Fragment>
+        <Text>Componente baseado em Classe!</Text>
+        <Text>Quantidade de Números para Sortear: {this.state.quantNumeros}</Text>
+      </React.Fragment>
+    );
+  }
+}
+
+export default Megasena;
+```
+
+- Próximo passo, vamos inserir um _TextInput_ para enviarmos a quantidade de números/_quantNumeros_ que queremos sortear. 
+Nesse _TextInput_ vamos aplicar as seguintes propriedades: _placeholder_ para criar visualizarmos a caixinha que devemos inserir essa quantidades; _value_ esse valor vai estar associado ao estado do componente, ou seja, _this.state.quantNumeros_ e aqui ele passa a ser um componente controlado e para alterarmos o valor associado a esse componente, primeiro alteramos o estado dele e dessa forma ele atualiza a interface gráfica... e vamos aterar o estado a partir do método/evento _onChangeText_ nesse método recebemos o novo _input_ que foi digitado e apartir desse texto chamamos uma função que recebe a função callback que irá alterar o estado do componente(nesse caso vamos criar uma função chamada _alterarQuantNumeros_):
+
+``` JSX
+import React, { Component } from "react";
+import { Text, TextInput } from "react-native";
+
+import Style from "../style";
+
+class Megasena extends Component {
+
+  state = {
+    quantNumeros: this.props.quantNumeros,
+  }
+
+  render() {
+    return (
+      <React.Fragment>
+        <Text>Componente baseado em Classe!</Text>
+        <Text>Quantidade de Números para Sortear: {this.state.quantNumeros}</Text>
+        <TextInput 
+          placeholder="Quantidade de Números"
+          value={this.state.quantNumeros}
+          onChangeText={ input =>  }
+        />
+      </React.Fragment>
+    );
+  }
+}
+
+export default Megasena;
+```
+
+- Agora, vamos criar a função chamada _alterarQuantNumeros_ que vai receber o _input_ e vai alterar o valor da _quantNumeros_. 
+Nessa função vamos alterar a _quantNumeros_ ou seja, alterar _state_. Assim como, no useState temos uma função que altera o estado, aqui dentro da classe também vamos ter **uma função para alterar o estado**, e o nome dela é _setState_. 
+Então, temos que chamar essa função _setState_ dentro da função _alterarQuantNUmero_ para conseguirmos alterar o valor.
+Em seguida, dentro da função _setState_ vamos passar um novo objeto para state(já que ele é um objeto), e nesse objeto vamos passar o atributo que queremos alterar(nesse caso é _quantNumeros_ que vai receber o valor que recebemos no parâmetro _input_ como novo valor):
+
+``` JSX
+import React, { Component } from "react";
+import { Text, TextInput } from "react-native";
+
+import Style from "../style";
+
+class Megasena extends Component {
+
+  state = {
+    quantNumeros: this.props.quantNumeros,
+  }
+
+  alterarQuantNumeros(input) {
+    this.setState({ quantNumeros: input })
+  }
+
+  render() {
+    return (
+      <React.Fragment>
+        <Text>Componente baseado em Classe!</Text>
+        <Text>Quantidade de Números para Sortear: {this.state.quantNumeros}</Text>
+        <TextInput 
+          placeholder="Quantidade de Números"
+          value={this.state.quantNumeros}
+          onChangeText={ input => }
+        />
+      </React.Fragment>
+    );
+  }
+}
+
+export default Megasena;
+```
+
+- Em seguida, no método _onChangeText_ do nosso _TextInput_ vamos chamar a função _alterarQuantNumeros_ e passar como parâmetro o valor recebido no _input_:
+
+``` JSX
+import React, { Component } from "react";
+import { Text, TextInput } from "react-native";
+
+import Style from "../style";
+
+class Megasena extends Component {
+
+  state = {
+    quantNumeros: this.props.quantNumeros,
+  }
+
+  alterarQuantNumeros(input) { 
+    this.setState({ quantNumeros: input })
+  }
+  // alterarQuantNumeros = (input) => { 
+    // this.setState({ quantNumeros: input })
+  // }
+
+
+  render() {
+    return (
+      <React.Fragment>
+        <Text>Componente baseado em Classe!</Text>
+        <Text>Quantidade de Números para Sortear: {this.state.quantNumeros}</Text>
+        <TextInput 
+          placeholder="Quantidade de Números"
+          value={this.state.quantNumeros}
+          onChangeText={ input => this.alterarQuantNumeros(input) }  // Para evitar um erro do this não apontar para a instância correta, vamos utilizar uma arrow function, ou ao invés de colocar uma função arrow aqui, podemos transformar a diretamente função alterarQuantNumeros em em uma arrow function, como demostrado no comentário acima
+        />
+      </React.Fragment>
+    );
+  }
+}
+
+export default Megasena;
+```
+
+### Componente Mega-Sena #01
+
+- Vamos querer também controlar o estado dos _numerosGerados_ e inicialment eles vão iniciar com um array vazio:
+
+``` JSX
+import React, { Component } from "react";
+import { Text, TextInput } from "react-native";
+
+import Style from "../style";
+
+class Megasena extends Component {
+
+  state = {
+    quantNumeros: this.props.quantNumeros,
+    numerosGerados: [],
+  }
+
+  alterarQuantNumeros(input) {
+    this.setState({ quantNumeros: input })
+  }
+
+  render() {
+    return (
+      <React.Fragment>
+        <Text>Componente baseado em Classe!</Text>
+        <Text>Quantidade de Números para Sortear: {this.state.quantNumeros}</Text>
+        <TextInput 
+          keyboardType={"numeric"}
+          style={{borderBottomWidth: 1}}
+          placeholder="Quantidade de Números"
+          value={this.state.quantNumeros}
+          onChangeText={ input => this.alterarQuantNumeros(input) } // Para evitar um erro do this não apontar para a instância correta, vamos utilizar uma arrow function
+        />
+      </React.Fragment>
+    );
+  }
+}
+
+export default Megasena;
+```
+
+- Agora, vamos corrigir o erro de que no _value_ do _TextInput_ ele espera um valor do tipo _string_ e para converter esse número(valor numérico) em uma string vamos interpolar usando batik(``):
+
+``` JSX
+import React, { Component } from "react";
+import { Text, TextInput } from "react-native";
+
+import Style from "../style";
+
+class Megasena extends Component {
+
+  state = {
+    quantNumeros: this.props.quantNumeros,
+    numerosGerados: [],
+  }
+
+  alterarQuantNumeros = (input) => { // Para evitar um erro do this não apontar para a instância correta, vamos utilizar arrow function
+    this.setState({ quantNumeros: input })
+  }
+
+  render() {
+    return (
+      <React.Fragment>
+        <Text>Componente baseado em Classe!</Text>
+        <Text>Quantidade de Números para Sortear: {this.state.quantNumeros}</Text>
+        <TextInput 
+          keyboardType={"numeric"}
+          style={{borderBottomWidth: 1}}
+          placeholder="Quantidade de Números"
+          value={ `${this.state.quantNumeros}` }
+          onChangeText={ this.alterarQuantNumeros } 
+        />
+      </React.Fragment>
+    );
+  }
+}
+
+export default Megasena;
+```
+
+- E como vamos receber o _input_ como um valor do tipo _string_ temos que converte-lo para um valor numérico, e conseguimos fazer isso apenas colocando um símbolo de _+_ na frente do valor que estamos passando:
+
+``` JSX
+import React, { Component } from "react";
+import { Text, TextInput } from "react-native";
+
+import Style from "../style";
+
+class Megasena extends Component {
+
+  state = {
+    quantNumeros: this.props.quantNumeros,
+    numerosGerados: [],
+  }
+
+  alterarQuantNumeros = (input) => { // Para evitar um erro do this não apontar para a instância correta, vamos utilizar arrow function
+    this.setState({ quantNumeros: +input })
+  }
+
+  render() {
+    return (
+      <React.Fragment>
+        <Text>Componente baseado em Classe!</Text>
+        <Text>Quantidade de Números para Sortear: {this.state.quantNumeros}</Text>
+        <TextInput 
+          keyboardType={"numeric"}
+          style={{borderBottomWidth: 1}}
+          placeholder="Quantidade de Números"
+          value={ `${this.state.quantNumeros}` }
+          onChangeText={ this.alterarQuantNumeros } 
+        />
+      </React.Fragment>
+    );
+  }
+}
+
+export default Megasena;
+```
+
+- Agora, vamos fazer a parte de gerar os números de forma aleatória. Para isso, vamos criar uma função a qual vai receber como parâmetro um array de numeros/_nums_ e dentro dela vamos criar uma constante chamada _novo_ que vai receber um novo número que não está contido dentro do array _nums_, esse número alatório vai ser gerado a partir do método _Random_ o qual vai ser multiplicado por 60(o valor máximo que pode ser gerado):
+
+``` JSX
+import React, { Component } from "react";
+import { Text, TextInput } from "react-native";
+
+import Style from "../style";
+
+class Megasena extends Component {
+
+  state = {
+    quantNumeros: this.props.quantNumeros,
+    numerosGerados: [],
+  }
+
+  alterarQuantNumeros = (input) => { 
+    this.setState({ quantNumeros: +input })
+  }
+
+  gerarNumeroNaoContido = (nums) => {
+    const novo = parseInt(Math.random() * 60) + 1;
+  }
+
+  render() {
+    return (
+      <React.Fragment>
+        <Text>Componente baseado em Classe!</Text>
+        <Text>Quantidade de Números para Sortear: {this.state.quantNumeros}</Text>
+        <TextInput 
+          keyboardType={"numeric"}
+          style={{borderBottomWidth: 1}}
+          placeholder="Quantidade de Números"
+          value={ `${this.state.quantNumeros}` }
+          onChangeText={ this.alterarQuantNumeros } 
+        />
+      </React.Fragment>
+    );
+  }
+}
+
+export default Megasena;
+```
+
+- E se o número _novo_ gerado já tiver incluso dentro do array _nums_ a função vai ser chamada novamente e passar novamente os _nums_, mas caso não esteja incluso vai ser retornado o número _novo_:
+
+``` JSX
+import React, { Component } from "react";
+import { Text, TextInput } from "react-native";
+
+import Style from "../style";
+
+class Megasena extends Component {
+
+  state = {
+    quantNumeros: this.props.quantNumeros,
+    numerosGerados: [],
+  }
+
+  alterarQuantNumeros = (input) => { 
+    this.setState({ quantNumeros: +input })
+  }
+
+  gerarNumeroNaoContido = (nums) => {
+    const novo = parseInt(Math.random() * 60) + 1;
+    return nums.includes(novo) ? this.gerarNumeroNaoContido(nums) : novo;
+  }
+
+  render() {
+    return (
+      <React.Fragment>
+        <Text>Componente baseado em Classe!</Text>
+        <Text>Quantidade de Números para Sortear: {this.state.quantNumeros}</Text>
+        <TextInput 
+          keyboardType={"numeric"}
+          style={{borderBottomWidth: 1}}
+          placeholder="Quantidade de Números"
+          value={ `${this.state.quantNumeros}` }
+          onChangeText={ this.alterarQuantNumeros } 
+        />
+      </React.Fragment>
+    );
+  }
+}
+
+export default Megasena;
+```
+
+- Agora, vamos criar a função _gerarNumeros_ a qual vai alterar o estado do array _numerosGerados_:
+
+``` JSX
+import React, { Component } from "react";
+import { Text, TextInput } from "react-native";
+
+import Style from "../style";
+
+class Megasena extends Component {
+
+  state = {
+    quantNumeros: this.props.quantNumeros,
+    numerosGerados: [],
+  }
+
+  alterarQuantNumeros = (input) => { 
+    this.setState({ quantNumeros: +input })
+  }
+
+  gerarNumeroNaoContido = (nums) => {
+    const novo = parseInt(Math.random() * 60) + 1;
+    return nums.includes(novo) ? this.gerarNumeroNaoContido(nums) : novo;
+  }
+
+  gerarNumeros = () => {
+    this.setState({ numerosGerados: [] })
+  }
+
+  render() {
+    return (
+      <React.Fragment>
+        <Text>Componente baseado em Classe!</Text>
+        <Text>Quantidade de Números para Sortear: {this.state.quantNumeros}</Text>
+        <TextInput 
+          keyboardType={"numeric"}
+          style={{borderBottomWidth: 1}}
+          placeholder="Quantidade de Números"
+          value={ `${this.state.quantNumeros}` }
+          onChangeText={ this.alterarQuantNumeros } 
+        />
+      </React.Fragment>
+    );
+  }
+}
+
+export default Megasena;
+```
+
+- E vamos criar uma constante chamada _numerosGerados_ a qual vai receber um novo objeto _Array_ e iremos usar o método _fill_ para criar um array com o número de posições passadas para _quantNumeros_(this.state.quantNumeros) e apartir disso conseguimos chamar a função _reduce_:
+
+``` JSX
+import React, { Component } from "react";
+import { Text, TextInput } from "react-native";
+
+import Style from "../style";
+
+class Megasena extends Component {
+
+  state = {
+    quantNumeros: this.props.quantNumeros,
+    numerosGerados: [],
+  }
+
+  alterarQuantNumeros = (input) => { 
+    this.setState({ quantNumeros: +input })
+  }
+
+  gerarNumeroNaoContido = (nums) => {
+    const novo = parseInt(Math.random() * 60) + 1;
+    return nums.includes(novo) ? this.gerarNumeroNaoContido(nums) : novo;
+  }
+
+  gerarNumeros = () => {
+    const numerosGerados = Array(this.state.quantNumeros).fill().reduce()
+    this.setState({ numerosGerados: [] })
+  }
+
+  render() {
+    return (
+      <React.Fragment>
+        <Text>Componente baseado em Classe!</Text>
+        <Text>Quantidade de Números para Sortear: {this.state.quantNumeros}</Text>
+        <TextInput 
+          keyboardType={"numeric"}
+          style={{borderBottomWidth: 1}}
+          placeholder="Quantidade de Números"
+          value={ `${this.state.quantNumeros}` }
+          onChangeText={ this.alterarQuantNumeros } 
+        />
+      </React.Fragment>
+    );
+  }
+}
+
+export default Megasena;
+```
+
+- E agora, a partir do método _reduce_ vamos receber o array de números que vamos chamar de _n_ e vamos retornar a partir dele os números atuais(usando o operador spreed para pegar todos que já foram recebidos _...n_) e mais o novo número gerado a partir da função _gerarNumeroNaoContido_ passando o array de números já existente(_n_) como parâmetro para essa função:
+
+``` JSX
+import React, { Component } from "react";
+import { Text, TextInput } from "react-native";
+
+import Style from "../style";
+
+class Megasena extends Component {
+
+  state = {
+    quantNumeros: this.props.quantNumeros,
+    numerosGerados: [],
+  }
+
+  alterarQuantNumeros = (input) => { // Para evitar um erro do this não apontar para a instância correta, vamos utilizar arrow function
+    this.setState({ quantNumeros: +input })
+  }
+
+  gerarNumeroNaoContido = (nums) => {
+    const novo = parseInt(Math.random() * 60) + 1;
+    return nums.includes(novo) ? this.gerarNumeroNaoContido(nums) : novo;
+  }
+
+  gerarNumeros = () => {
+    const numerosGerados = Array(this.state.quantNumeros)
+      .fill()
+      .reduce(n => [...n, this.gerarNumeroNaoContido(n)], [])
+
+    this.setState({ numerosGerados: [] })
+  }
+
+  render() {
+    return (
+      <React.Fragment>
+        <Text>Componente baseado em Classe!</Text>
+        <Text>Quantidade de Números para Sortear: {this.state.quantNumeros}</Text>
+        <TextInput 
+          keyboardType={"numeric"}
+          style={{borderBottomWidth: 1}}
+          placeholder="Quantidade de Números"
+          value={ `${this.state.quantNumeros}` }
+          onChangeText={ this.alterarQuantNumeros } 
+        />
+      </React.Fragment>
+    );
+  }
+}
+
+export default Megasena;
+```
+
+- E agora, podemos passar esse array de _numeros_ gerado para alterar o estado do _numerosGerados_:
+
+``` JSX
+import React, { Component } from "react";
+import { Text, TextInput } from "react-native";
+
+import Style from "../style";
+
+class Megasena extends Component {
+
+  state = {
+    quantNumeros: this.props.quantNumeros,
+    numerosGerados: [],
+  }
+
+  alterarQuantNumeros = (input) => { // Para evitar um erro do this não apontar para a instância correta, vamos utilizar arrow function
+    this.setState({ quantNumeros: +input })
+  }
+
+  gerarNumeroNaoContido = (nums) => {
+    const novo = parseInt(Math.random() * 60) + 1;
+    return nums.includes(novo) ? this.gerarNumeroNaoContido(nums) : novo;
+  }
+
+  gerarNumeros = () => {
+    const numerosGerados = Array(this.state.quantNumeros)
+      .fill()
+      .reduce(n => [...n, this.gerarNumeroNaoContido(n)], [])
+
+    this.setState({ numerosGerados: numerosGerados }) // OU podemos colocar apenas ({ numerosGerados }), já ambos tem o mesmo nome
+  }
+
+  render() {
+    return (
+      <React.Fragment>
+        <Text>Componente baseado em Classe!</Text>
+        <Text>Quantidade de Números para Sortear: {this.state.quantNumeros}</Text>
+        <TextInput 
+          keyboardType={"numeric"}
+          style={{borderBottomWidth: 1}}
+          placeholder="Quantidade de Números"
+          value={ `${this.state.quantNumeros}` }
+          onChangeText={ this.alterarQuantNumeros } 
+        />
+      </React.Fragment>
+    );
+  }
+}
+
+export default Megasena;
+```
+
+- E agora, uma vez que chamarmos a função _gerarNumeros_ automáticamente esse novo array será setado. E para essa função ser chamada, vamos criar um componente _Button_ com o _title_ de "Gerar" e o evento _onPress_ que irá chamar essa função _gerarNumeros_(this.gerarNumeros):
+
+``` JSX
+import React, { Component } from "react";
+import { Button, Text, TextInput } from "react-native";
+
+import Style from "../style";
+
+class Megasena extends Component {
+
+  state = {
+    quantNumeros: this.props.quantNumeros,
+    numerosGerados: [],
+  }
+
+  alterarQuantNumeros = (input) => { // Para evitar um erro do this não apontar para a instância correta, vamos utilizar arrow function
+    this.setState({ quantNumeros: +input })
+  }
+
+  gerarNumeroNaoContido = (nums) => {
+    const novo = parseInt(Math.random() * 60) + 1;
+    return nums.includes(novo) ? this.gerarNumeroNaoContido(nums) : novo;
+  }
+
+  gerarNumeros = () => {
+    const numerosGerados = Array(this.state.quantNumeros)
+      .fill
+      .reduce(n => [...n, this.gerarNumeroNaoContido(n)], [])
+
+    this.setState({ numerosGerados: numerosGerados })
+  }
+
+  render() {
+    return (
+      <React.Fragment>
+        <Text>Componente baseado em Classe!</Text>
+        <Text>Quantidade de Números para Sortear: {this.state.quantNumeros}</Text>
+        <TextInput 
+          keyboardType={"numeric"}
+          style={{borderBottomWidth: 1}}
+          placeholder="Quantidade de Números"
+          value={ `${this.state.quantNumeros}` }
+          onChangeText={ this.alterarQuantNumeros } 
+        />
+        <Button 
+          title="Gerar"
+          onPress={this.gerarNumeros}
+        /> 
+      </React.Fragment>
+    );
+  }
+}
+
+export default Megasena;
+```
+
+
+- Então, vamos criar um novo componente _Text_ e dentro dele interpolar os _numerosGerados_ e como é um array vamos usar o método _join(',')_ para separar os números por virgula e visualizarmos melhor em tela:
+
+``` JSX
+import React, { Component } from "react";
+import { Button, Text, TextInput } from "react-native";
+
+import Style from "../style";
+
+class Megasena extends Component {
+
+  state = {
+    quantNumeros: this.props.quantNumeros,
+    numerosGerados: [],
+  }
+
+  alterarQuantNumeros = (input) => { // Para evitar um erro do this não apontar para a instância correta, vamos utilizar arrow function
+    this.setState({ quantNumeros: +input })
+  }
+
+  gerarNumeroNaoContido = (nums) => {
+    const novo = parseInt(Math.random() * 60) + 1;
+    return nums.includes(novo) ? this.gerarNumeroNaoContido(nums) : novo;
+  }
+
+  gerarNumeros = () => {
+    const numerosGerados = Array(this.state.quantNumeros)
+      .fill()
+      .reduce(n => [...n, this.gerarNumeroNaoContido(n)], [])
+
+    this.setState({ numerosGerados: numerosGerados })
+  }
+
+  render() {
+    return (
+      <React.Fragment>
+        <Text>Componente baseado em Classe!</Text>
+        <Text>Quantidade de Números para Sortear: {this.state.quantNumeros}</Text>
+        <TextInput 
+          keyboardType={"numeric"}
+          style={{borderBottomWidth: 1}}
+          placeholder="Quantidade de Números"
+          value={ `${this.state.quantNumeros}` }
+          onChangeText={ this.alterarQuantNumeros } 
+        />
+        <Button 
+          title="Gerar"
+          onPress={this.gerarNumeros}
+        /> 
+        <Text>
+          { this.state.numerosGerados.join(',') }
+        </Text>
+      </React.Fragment>
+    );
+  }
+}
+
+export default Megasena;
+```
+
+- E para ordenar os números sorteados podemos usar o método _sort_ o qual vai receber os valor _a_ e _b_ e vai ordenar como _a - b_ com esse critério ele vai ordenar de forma crescente:
+
+``` JSX
+import React, { Component } from "react";
+import { Button, Text, TextInput } from "react-native";
+
+import Style from "../style";
+
+class Megasena extends Component {
+
+  state = {
+    quantNumeros: this.props.quantNumeros,
+    numerosGerados: [],
+  }
+
+  alterarQuantNumeros = (input) => { // Para evitar um erro do this não apontar para a instância correta, vamos utilizar arrow function
+    this.setState({ quantNumeros: +input })
+  }
+
+  gerarNumeroNaoContido = (nums) => {
+    const novo = parseInt(Math.random() * 60) + 1;
+    return nums.includes(novo) ? this.gerarNumeroNaoContido(nums) : novo;
+  }
+
+  gerarNumeros = () => {
+    const numerosGerados = Array(this.state.quantNumeros)
+      .fill()
+      .reduce(n => [...n, this.gerarNumeroNaoContido(n)], [])
+      .sort((a, b) => a - b)
+
+    this.setState({ numerosGerados: numerosGerados })
+  }
+
+  // Outra forma de fazer essa função, mais simples.
+  // gerarNumeros = () => {
+  //   const  { quantNumeros } = this.state 
+  //   const numerosGerados = []
+
+  //   for(let i = 0; i < quantNumeros; i++) {
+  //     numerosGerados.push(this.gerarNumeroNaoContido(numerosGerados))
+  //   }
+
+  //   this.setState({ numerosGerados })
+  // }
+
+  render() {
+    return (
+      <React.Fragment>
+        <Text>Componente baseado em Classe!</Text>
+        <Text>Quantidade de Números para Sortear: {this.state.quantNumeros}</Text>
+        <TextInput 
+          keyboardType={"numeric"}
+          style={{borderBottomWidth: 1}}
+          placeholder="Quantidade de Números"
+          value={ `${this.state.quantNumeros}` }
+          onChangeText={ this.alterarQuantNumeros } 
+        />
+        <Button 
+          title="Gerar"
+          onPress={this.gerarNumeros}
+        /> 
+        <Text>
+          { this.state.numerosGerados.join(',') }
+        </Text>
+      </React.Fragment>
+    );
+  }
+}
+
+export default Megasena;
+```
+
+### Componente Mega-Sena #02
+
+- Vamos criar um componente para exibir e estilizar os números sorteados da mega sena. Para isso, dentro de src/components/componente-class vamos criar um componente funcional chamado _NumeroMega.js_. Esse componente irá receber via props um numero o qual iremos interpolar ao componte _Text_ para exibirmos em tela:
+
+``` JSX
+import React from "react";
+import { Text, View } from "react-native";
+
+import Style from "../style";
+
+const NumeroMega = ({ numero }) => {
+  return (
+    <View>
+      <Text style={Style.textDefault}>{numero}</Text>
+    </View>
+  );
+}
+
+export default NumeroMega;
+```
+
+- E para melhorar a visualização vamos criar um objeto de estilo através do _StyleSheet_ e nele iremos criar objetos de estilo para a _View_ e para o _Text_, que iremos chamar de _Container_ e _Number_ respectivamente:
+
+``` JSX
+import React from "react";
+import { StyleSheet, Text, View } from "react-native";
+
+import Style from "../style";
+
+const NumeroMega = ({ numero }) => {
+  return (
+    <View style={stylesNumeroMega.Container}>
+      <Text style={[Style.textDefault, stylesNumeroMega.Number]}>
+        {numero}
+      </Text>
+    </View>
+  );
+}
+
+const stylesNumeroMega = StyleSheet.create({
+  Container: {
+    backgroundColor: "#000",
+    
+    height: 50,
+    width: 50,
+
+    margin: 5,
+    borderRadius: 25,
+  },
+  Number: {
+    color: "#FFF",
+    fontSize: 24
+  },
+})
+
+export default NumeroMega;
+```
+
+- E dentro do componente _Megasena_ para exibir os números através dos componentes _NumeroMega_ vamos criar uma função que iremos chamar de _exibirNUmeros_(essa função deve ser arrow para exibir o problema com o this). 
+Nessa função, vamos criar uma constantes que iremos chamar de _numeros_ a qual vai receber os valores de _numerosGerados_(this.state.numerosGerados) em seguida, vai retornar _numeros_ chamando o método _map_ o qual irá receber cada um dos numeros/_numero_ e chamar uma função arrow a qual vai retornar/_return_ um trecho JSX:
+
+``` JSX
+import React, { Component } from "react";
+import { Button, Text, TextInput } from "react-native";
+
+import Style from "../style";
+
+class Megasena extends Component {
+
+  state = {
+    quantNumeros: this.props.quantNumeros,
+    numerosGerados: [],
+  }
+
+  alterarQuantNumeros = (input) => { 
+    this.setState({ quantNumeros: +input })
+  }
+
+  gerarNumeroNaoContido = (nums) => {
+    const novo = parseInt(Math.random() * 60) + 1;
+    return nums.includes(novo) ? this.gerarNumeroNaoContido(nums) : novo;
+  }
+
+  gerarNumeros = () => {
+    const numerosGerados = Array(this.state.quantNumeros)
+      .fill()
+      .reduce(n => [...n, this.gerarNumeroNaoContido(n)], [])
+      .sort((a, b) => a - b)
+
+    this.setState({ numerosGerados: numerosGerados })
+  }
+
+  exibirNumeros = () => {
+    const numeros = this.state.numerosGerados;
+    return numeros.map(numero => {
+      return
+    })
+  }
+
+  render() {
+    return (
+      <React.Fragment>
+        <Text>Componente baseado em Classe!</Text>
+        <Text>Quantidade de Números para Sortear: {this.state.quantNumeros}</Text>
+        <TextInput 
+          keyboardType={"numeric"}
+          style={{borderBottomWidth: 1}}
+          placeholder="Quantidade de Números"
+          value={ `${this.state.quantNumeros}` }
+          onChangeText={ this.alterarQuantNumeros } 
+        />
+        <Button 
+          title="Gerar"
+          onPress={this.gerarNumeros}
+        /> 
+        <Text>
+          { this.state.numerosGerados.join(',') }
+        </Text>
+      </React.Fragment>
+    );
+  }
+}
+
+export default Megasena;
+```
+
+- Já criamos um componente _NumeroMega_ que vai retornar esse trecho JSX com cada número. Portanto, vamos importá-lo para dentro do componente _Megasena_ e retornar passando via props para o atributo _numero_ o numero que está sendo percorrido pelo map. Também não podemos de colocar a chave/_key_ para esse elemento, que nesse caso pode ser o próprio _numero_:
+
+``` JSX
+import React, { Component } from "react";
+import { Button, Text, TextInput } from "react-native";
+
+import NumeroMega from "./NumeroMega";
+
+class Megasena extends Component {
+
+  state = {
+    quantNumeros: this.props.quantNumeros,
+    numerosGerados: [],
+  }
+
+  alterarQuantNumeros = (input) => { 
+    this.setState({ quantNumeros: +input })
+  }
+
+  gerarNumeroNaoContido = (nums) => {
+    const novo = parseInt(Math.random() * 60) + 1;
+    return nums.includes(novo) ? this.gerarNumeroNaoContido(nums) : novo;
+  }
+
+  gerarNumeros = () => {
+    const numerosGerados = Array(this.state.quantNumeros)
+      .fill()
+      .reduce(n => [...n, this.gerarNumeroNaoContido(n)], [])
+      .sort((a, b) => a - b)
+
+    this.setState({ numerosGerados: numerosGerados })
+  }
+
+  exibirNumeros = () => {
+    const numeros = this.state.numerosGerados;
+    return numeros.map(numero => {
+      return <NumeroMega key={numero} numero={numero}/>
+    })
+  }
+
+  render() {
+    return (
+      <React.Fragment>
+        <Text>Componente baseado em Classe!</Text>
+        <Text>Quantidade de Números para Sortear: {this.state.quantNumeros}</Text>
+        <TextInput 
+          keyboardType={"numeric"}
+          style={{borderBottomWidth: 1}}
+          placeholder="Quantidade de Números"
+          value={ `${this.state.quantNumeros}` }
+          onChangeText={ this.alterarQuantNumeros } 
+        />
+        <Button 
+          title="Gerar"
+          onPress={this.gerarNumeros}
+        /> 
+        <Text>
+          { this.state.numerosGerados.join(',') }
+        </Text>
+      </React.Fragment>
+    );
+  }
+}
+
+export default Megasena;
+```
+
+- Desse modo, conseguimos chamar a função _exibirNumeros_ no lugar do componente Text que estava fazendo essa exibição:
+
+``` JSX
+import React, { Component } from "react";
+import { Button, Text, TextInput } from "react-native";
+
+import NumeroMega from "./NumeroMega";
+
+class Megasena extends Component {
+
+  state = {
+    quantNumeros: this.props.quantNumeros,
+    numerosGerados: [],
+  }
+
+  alterarQuantNumeros = (input) => { 
+    this.setState({ quantNumeros: +input })
+  }
+
+  gerarNumeroNaoContido = (nums) => {
+    const novo = parseInt(Math.random() * 60) + 1;
+    return nums.includes(novo) ? this.gerarNumeroNaoContido(nums) : novo;
+  }
+
+  gerarNumeros = () => {
+    const numerosGerados = Array(this.state.quantNumeros)
+      .fill()
+      .reduce(n => [...n, this.gerarNumeroNaoContido(n)], [])
+      .sort((a, b) => a - b)
+
+    this.setState({ numerosGerados: numerosGerados })
+  }
+
+  exibirNumeros = () => {
+    const numeros = this.state.numerosGerados;
+    return numeros.map(numero => {
+      return <NumeroMega key={numero} numero={numero}/>
+    })
+  }
+
+  render() {
+    return (
+      <React.Fragment>
+        <Text>Componente baseado em Classe!</Text>
+        <Text>Quantidade de Números para Sortear: {this.state.quantNumeros}</Text>
+        <TextInput 
+          keyboardType={"numeric"}
+          style={{borderBottomWidth: 1}}
+          placeholder="Quantidade de Números"
+          value={ `${this.state.quantNumeros}` }
+          onChangeText={ this.alterarQuantNumeros } 
+        />
+        <Button 
+          title="Gerar"
+          onPress={this.gerarNumeros}
+        /> 
+        {this.exibirNumeros()}
+      </React.Fragment>
+    );
+  }
+}
+
+export default Megasena;
 ```

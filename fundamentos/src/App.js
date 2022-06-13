@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, SafeAreaView, Text } from "react-native";
+import { StyleSheet, SafeAreaView } from "react-native";
 
 import Style from "./components/style";
 
@@ -18,7 +18,11 @@ import ChildRelationship from "./components/relationship/ChildRelationship";
 import ListProducts from "./components/products/ListProducts";
 import ListProductsV2 from "./components/products/ListProductsV2";
 import Input from "./components/Input";
-import Square from "./components/layout/Square";
+// import Square from "./components/layout/Square";
+import FlexboxV1 from "./components/layout/FlexboxV1";
+import FlexboxV2 from "./components/layout/FlexboxV2";
+import FlexboxV3 from "./components/layout/FlexboxV3";
+import Megasena from "./components/componente-class/Megasena";
 
 const App = () => {
   // console.warn("Opa!")
@@ -42,11 +46,11 @@ const App = () => {
       </DadRealationship> 
       <ListProducts />
       <ListProductsV2 />
-      <Input /> */}
-      <Square />
-      <Square color="#900"/>
-      <Square color="#090"/>
-      <Square color="#009"/>
+      <Input /> 
+      <FlexboxV1 /> 
+      <FlexboxV2 /> 
+      <FlexboxV3 /> */}
+      <Megasena quantNumeros={7}/>
     </SafeAreaView>
   );
 }

@@ -4,8 +4,8 @@ import { View } from "react-native";
 const Square = (props) => {
   return (
     <View style={{
-      height: 20,
-      width: 20, 
+      height: 50,
+      width: 50, 
       backgroundColor: props.color || "#000"
     }}
     />
